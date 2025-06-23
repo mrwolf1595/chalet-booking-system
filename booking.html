@@ -14,12 +14,19 @@
 </head>
 <body>
     <header>
-        <h1>🏖️ حجز الشالية</h1>
+        <h1>حجز الشالية</h1>
         <p>املأ البيانات التالية لإتمام الحجز</p>
     </header>
 
     <main>
         <div class="booking-container">
+            <div style="text-align: center; margin-bottom: 2rem; padding: 1.5rem; background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%); border-radius: 12px; border: 1px solid #e1bee7;">
+                <h2 style="margin-bottom: 1rem; color: #667eea;">📝 نموذج حجز الشالية</h2>
+                <p style="color: #6c757d; margin-bottom: 0;">
+                    يرجى ملء جميع البيانات المطلوبة بدقة لضمان معالجة طلب الحجز بنجاح
+                </p>
+            </div>
+
             <form id="bookingForm">
                 <div class="form-group">
                     <label for="date">تاريخ الحجز:</label>
@@ -30,48 +37,171 @@
                 <div class="form-group">
                     <label for="customerName">الاسم الكامل:</label>
                     <input type="text" id="customerName" required placeholder="أدخل الاسم الكامل">
+                    <small style="color: #6c757d; font-size: 0.85rem; display: block; margin-top: 5px;">
+                        يجب أن يكون الاسم مطابقاً لبطاقة الهوية
+                    </small>
                 </div>
 
                 <div class="form-group">
                     <label for="customerPhone">رقم الجوال:</label>
                     <input type="tel" id="customerPhone" required placeholder="05xxxxxxxx" maxlength="10">
+                    <small style="color: #6c757d; font-size: 0.85rem; display: block; margin-top: 5px;">
+                        رقم جوال سعودي صالح (مثال: 0501234567)
+                    </small>
                 </div>
 
                 <div class="form-group">
                     <label for="nationalId">رقم الهوية:</label>
                     <input type="text" id="nationalId" required placeholder="1xxxxxxxxx أو 2xxxxxxxxx" maxlength="10">
+                    <small style="color: #6c757d; font-size: 0.85rem; display: block; margin-top: 5px;">
+                        رقم هوية سعودي مكون من 10 أرقام
+                    </small>
                 </div>
 
                 <div class="form-group">
                     <label for="depositAmount">مبلغ العربون (ريال سعودي):</label>
                     <input type="number" id="depositAmount" required placeholder="أدخل مبلغ العربون" min="50" max="5000" step="0.01">
-                    <small style="color: rgba(255,255,255,0.7); font-size: 0.85rem; display: block; margin-top: 5px;">
-                        الحد الأدنى: 50 ريال | الحد الأقصى: 5000 ريال
+                    <small style="color: #6c757d; font-size: 0.85rem; display: block; margin-top: 5px;">
+                        💡 الحد الأدنى: 50 ريال | الحد الأقصى: 5000 ريال
                     </small>
                     <div id="deposit-preview"></div>
                 </div>
 
-                <div style="background: rgba(255, 193, 7, 0.2); border: 1px solid #FFC107; border-radius: 10px; padding: 15px; margin: 20px 0; text-align: center;">
-                    <strong style="color: #FFD700;">💡 ملاحظة مهمة</strong><br>
-                    <small style="color: rgba(255,255,255,0.9); line-height: 1.5;">
+                <div style="background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); border: 1px solid #ffc107; border-radius: 12px; padding: 1.5rem; margin: 2rem 0; text-align: center;">
+                    <h4 style="color: #856404; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        💡 ملاحظة مهمة
+                    </h4>
+                    <p style="color: #6c757d; line-height: 1.6; margin: 0;">
                         العربون المدفوع هو جزء من إجمالي تكلفة الحجز<br>
                         سيتم تحديد المبلغ الإجمالي وإشعارك من قبل الإدارة عند تأكيد الحجز
-                    </small>
+                    </p>
                 </div>
 
-                <button type="submit" style="background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%); position: relative; overflow: hidden;">
-                    <span style="position: relative; z-index: 1;">💳 إرسال طلب الحجز</span>
+                <button type="submit" style="width: 100%; background: var(--success-gradient); position: relative; overflow: hidden;">
+                    <span style="position: relative; z-index: 1;">إرسال طلب الحجز</span>
                 </button>
             </form>
 
             <div id="result"></div>
             
-            <div style="text-align: center; margin-top: 2rem;">
-                <a href="index.html" class="admin-btn" style="background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);">
+            <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e0e0e0;">
+                <a href="index.html" class="admin-btn" style="background: var(--accent-gradient);">
                     العودة للصفحة الرئيسية
                 </a>
             </div>
         </div>
+
+        <!-- قسم الأسئلة الشائعة -->
+        <section style="margin-top: 3rem; padding: 2rem; background: rgba(255,255,255,0.95); border-radius: 16px; box-shadow: 0 8px 15px rgba(0,0,0,0.15); color: #2c3e50;">
+            <h3 style="text-align: center; margin-bottom: 1.5rem; color: #667eea;">
+                ❓ أسئلة شائعة حول الحجز
+            </h3>
+            <div style="display: grid; gap: 1rem;">
+                <details style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border: 1px solid #e0e0e0;">
+                    <summary style="font-weight: 600; cursor: pointer; margin-bottom: 0.5rem;">
+                        🤔 كيف يتم تأكيد الحجز؟
+                    </summary>
+                    <p style="color: #6c757d; margin: 0; padding-top: 0.5rem;">
+                        بعد إرسال طلب الحجز، ستقوم الإدارة بمراجعة البيانات وتأكيد الحجز خلال 24 ساعة.
+                    </p>
+                </details>
+                
+                <details style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border: 1px solid #e0e0e0;">
+                    <summary style="font-weight: 600; cursor: pointer; margin-bottom: 0.5rem;">
+                        💰 متى يتم دفع باقي المبلغ؟
+                    </summary>
+                    <p style="color: #6c757d; margin: 0; padding-top: 0.5rem;">
+                        باقي المبلغ يتم دفعه عند الوصول للشالية أو حسب ما يتم الاتفاق عليه مع الإدارة.
+                    </p>
+                </details>
+                
+                <details style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border: 1px solid #e0e0e0;">
+                    <summary style="font-weight: 600; cursor: pointer; margin-bottom: 0.5rem;">
+                        📞 كيف يمكنني التواصل مع الإدارة؟
+                    </summary>
+                    <p style="color: #6c757d; margin: 0; padding-top: 0.5rem;">
+                        سيتم التواصل معك عبر رقم الجوال المسجل لتأكيد تفاصيل الحجز والدفع.
+                    </p>
+                </details>
+                
+                <details style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border: 1px solid #e0e0e0;">
+                    <summary style="font-weight: 600; cursor: pointer; margin-bottom: 0.5rem;">
+                        🏖️ ما المرافق المتوفرة في الشالية؟
+                    </summary>
+                    <p style="color: #6c757d; margin: 0; padding-top: 0.5rem;">
+                        الشالية مجهزة بجميع المرافق الضرورية للراحة والاستمتاع خلال إقامتك.
+                    </p>
+                </details>
+                
+                <details style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border: 1px solid #e0e0e0;">
+                    <summary style="font-weight: 600; cursor: pointer; margin-bottom: 0.5rem;">
+                        ⏰ ما هي أوقات تسليم واستلام الشالية؟
+                    </summary>
+                    <p style="color: #6c757d; margin: 0; padding-top: 0.5rem;">
+                        سيتم إبلاغك بأوقات التسليم والاستلام عند تأكيد الحجز من قبل الإدارة.
+                    </p>
+                </details>
+                
+                <details style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border: 1px solid #e0e0e0;">
+                    <summary style="font-weight: 600; cursor: pointer; margin-bottom: 0.5rem;">
+                        ❌ ما هي سياسة الإلغاء؟
+                    </summary>
+                    <p style="color: #6c757d; margin: 0; padding-top: 0.5rem;">
+                        يمكن إلغاء الحجز حسب الشروط والأحكام التي سيتم إبلاغك بها عند التأكيد.
+                    </p>
+                </details>
+            </div>
+        </section>
+
+        <!-- قسم الضمانات والأمان -->
+        <section style="margin-top: 2rem; padding: 2rem; background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%); border-radius: 16px; border: 1px solid #d4edda; color: #2c3e50;">
+            <h3 style="text-align: center; margin-bottom: 1.5rem; color: #28a745;">
+                🛡️ الأمان والضمانات
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                <div style="text-align: center; padding: 1rem;">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔒</div>
+                    <h4 style="margin-bottom: 0.5rem; color: #28a745;">بيانات محمية</h4>
+                    <p style="font-size: 0.9rem; color: #6c757d; margin: 0;">
+                        جميع بياناتك الشخصية محمية بأعلى معايير الأمان
+                    </p>
+                </div>
+                <div style="text-align: center; padding: 1rem;">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">✅</div>
+                    <h4 style="margin-bottom: 0.5rem; color: #28a745;">ضمان الحجز</h4>
+                    <p style="font-size: 0.9rem; color: #6c757d; margin: 0;">
+                        حجزك مضمون ومؤكد عند إتمام عملية الدفع
+                    </p>
+                </div>
+                <div style="text-align: center; padding: 1rem;">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📞</div>
+                    <h4 style="margin-bottom: 0.5rem; color: #28a745;">دعم 24/7</h4>
+                    <p style="font-size: 0.9rem; color: #6c757d; margin: 0;">
+                        فريق الدعم متاح للمساعدة في أي وقت
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- معلومات الاتصال -->
+        <section style="margin-top: 2rem; padding: 2rem; background: rgba(255,255,255,0.95); border-radius: 16px; box-shadow: 0 8px 15px rgba(0,0,0,0.15); color: #2c3e50; text-align: center;">
+            <h3 style="margin-bottom: 1.5rem; color: #667eea;">
+                📞 هل تحتاج مساعدة؟
+            </h3>
+            <p style="color: #6c757d; margin-bottom: 1rem; font-size: 1.1rem;">
+                فريق خدمة العملاء جاهز لمساعدتك في أي استفسار
+            </p>
+            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border: 1px solid #e0e0e0;">
+                    <strong style="color: #667eea;">📱 الجوال:</strong>
+                    <div style="margin-top: 0.25rem; color: #6c757d;">سيتم إرساله عند التأكيد</div>
+                </div>
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border: 1px solid #e0e0e0;">
+                    <strong style="color: #667eea;">📧 البريد:</strong>
+                    <div style="margin-top: 0.25rem; color: #6c757d;">سيتم إرساله عند التأكيد</div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Toast Container (سيتم إنشاؤه تلقائياً) -->

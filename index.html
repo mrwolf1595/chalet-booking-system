@@ -15,13 +15,16 @@
 </head>
 <body>
     <header>
-        <h1>🏖️ شالية الأحلام</h1>
-        <p>احجز شاليتك بسهولة</p>
+        <h1>شالية الأحلام</h1>
+        <p>احجز شاليتك بسهولة ويسر</p>
     </header>
 
     <main>
         <section id="hero">
-            <h2>مرحباً بك في نظام الحجز</h2>
+            <h2>مرحباً بك في نظام الحجز الإلكتروني</h2>
+            <p style="font-size: 1.1rem; margin-bottom: 2rem; color: #6c757d;">
+                استمتع بتجربة حجز سهلة وآمنة لشاليتك المفضلة
+            </p>
             <div class="hero-buttons">
                 <a href="booking.html" class="booking-btn">احجز الآن</a>
                 <a href="admin.html" class="admin-btn">لوحة الإدارة</a>
@@ -31,28 +34,66 @@
         <section id="availability-calendar">
             <div class="calendar-container">
                 <h2>تقويم التوفر</h2>
+                <p style="text-align: center; margin-bottom: 1.5rem; color: #6c757d;">
+                    اطلع على التواريخ المتاحة واختر ما يناسبك
+                </p>
                 <div class="calendar-header">
-                    <button id="prevMonth" class="nav-btn">‹</button>
+                    <button id="prevMonth" class="nav-btn" title="الشهر السابق">‹</button>
                     <h3 id="currentMonth">يونيو 2025</h3>
-                    <button id="nextMonth" class="nav-btn">›</button>
+                    <button id="nextMonth" class="nav-btn" title="الشهر التالي">›</button>
                 </div>
                 <div class="calendar-legend">
-                    <span class="legend-item"><span class="dot available"></span> متاح</span>
-                    <span class="legend-item"><span class="dot booked"></span> محجوز</span>
-                    <span class="legend-item"><span class="dot pending"></span> في الانتظار</span>
+                    <span class="legend-item">
+                        <span class="dot available"></span>
+                        متاح للحجز
+                    </span>
+                    <span class="legend-item">
+                        <span class="dot booked"></span>
+                        محجوز
+                    </span>
+                    <span class="legend-item">
+                        <span class="dot pending"></span>
+                        في الانتظار
+                    </span>
                 </div>
                 <div id="calendar-grid" class="calendar-grid"></div>
+                <p style="text-align: center; margin-top: 1rem; color: #6c757d; font-size: 0.9rem;">
+                    💡 اضغط على التاريخ المتاح للانتقال لصفحة الحجز مباشرة
+                </p>
             </div>
         </section>
 
-        <section id="test-section" style="margin-top: 2rem;">
-            <button id="testFirebase">اختبار الاتصال بقاعدة البيانات</button>
+        <section id="test-section" style="margin-top: 2rem; text-align: center;">
+            <button id="testFirebase" style="background: var(--accent-gradient);">
+                اختبار الاتصال بقاعدة البيانات
+            </button>
             <div id="status"></div>
+        </section>
+
+        <section style="margin-top: 3rem; padding: 2rem; background: rgba(255,255,255,0.95); border-radius: 16px; box-shadow: 0 8px 15px rgba(0,0,0,0.15); color: #2c3e50;">
+            <h3 style="text-align: center; margin-bottom: 1.5rem; color: #667eea;">
+                ✨ مميزات نظام الحجز
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                <div style="text-align: center; padding: 1rem;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔒</div>
+                    <h4 style="margin-bottom: 0.5rem;">حجز آمن</h4>
+                    <p style="font-size: 0.9rem; color: #6c757d;">نظام حجز محمي وآمن بالكامل</p>
+                </div>
+                <div style="text-align: center; padding: 1rem;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚡</div>
+                    <h4 style="margin-bottom: 0.5rem;">سريع وسهل</h4>
+                    <p style="font-size: 0.9rem; color: #6c757d;">احجز في دقائق معدودة</p>
+                </div>
+                <div style="text-align: center; padding: 1rem;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">📱</div>
+                    <h4 style="margin-bottom: 0.5rem;">متوافق مع الجوال</h4>
+                    <p style="font-size: 0.9rem; color: #6c757d;">يعمل على جميع الأجهزة</p>
+                </div>
+            </div>
         </section>
     </main>
 
-    <!-- Toast Container (سيتم إنشاؤه تلقائياً) -->
-    
     <!-- JavaScript -->
     <script src="js/config.js"></script>
     <script src="js/toast.js"></script>
