@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة الإدارة - شالية الأحلام</title>
+    <title>لوحة إدارة الحجوزات</title>
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
@@ -12,90 +12,80 @@
     
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
     <header>
-        <h1>🏖️ شالية الأحلام</h1>
-        <p>لوحة إدارة الحجوزات</p>
+        <h1>🛠️ لوحة إدارة الحجوزات</h1>
+        <p>إدارة جميع حجوزات الشالية</p>
     </header>
 
-    <main class="admin-container">
+    <main>
         <!-- شاشة تسجيل الدخول -->
-        <div id="loginContainer" class="login-container">
-            <h2>🔐 تسجيل دخول الإدارة</h2>
-            <form id="loginForm">
-                <div class="form-group">
-                    <input type="email" id="adminEmail" placeholder="البريد الإلكتروني" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="adminPassword" placeholder="كلمة المرور" required>
-                </div>
-                <button type="submit" id="loginButton">دخول</button>
-            </form>
-            <div id="loginStatus"></div>
-            
-            <div style="margin-top: 2rem;">
-                <a href="index.html" style="color: white; text-decoration: none;">← العودة للرئيسية</a>
-            </div>
+        <div id="loginScreen" class="login-container">
+            <h2>تسجيل دخول الإدارة</h2>
+<form id="loginForm">
+    <div class="form-group">
+        <label for="adminEmail">البريد الإلكتروني:</label>
+        <input type="email" id="adminEmail" required>
+    </div>
+    <div class="form-group">
+        <label for="adminPassword">كلمة المرور:</label>
+        <input type="password" id="adminPassword" required>
+    </div>
+    <button type="submit">دخول</button>
+</form>
+            <div id="loginError"></div>
         </div>
 
-        <!-- لوحة الإدارة الرئيسية -->
-        <div id="dashboard" class="dashboard">
-            <!-- الإحصائيات -->
-            <div class="stats-grid" id="statsGrid">
-                <div class="stat-card">
-                    <div class="stat-number" id="totalBookings">0</div>
-                    <div class="stat-label">إجمالي الحجوزات</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="pendingBookings">0</div>
-                    <div class="stat-label">في الانتظار</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="confirmedBookings">0</div>
-                    <div class="stat-label">مؤكدة</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="thisMonthBookings">0</div>
-                    <div class="stat-label">هذا الشهر</div>
-                </div>
-            </div>
-
-            <!-- أدوات التحكم -->
-            <div class="header-controls">
-                <h2>📋 إدارة الحجوزات</h2>
-                <div class="filter-controls">
-                    <select id="statusFilter" class="filter-select">
-                        <option value="all">جميع الحالات</option>
-                        <option value="pending">في الانتظار</option>
-                        <option value="confirmed">مؤكدة</option>
-                        <option value="cancelled">ملغية</option>
-                    </select>
-                    <button type="button" id="refreshButton" class="btn-small" style="background: #2196F3;">تحديث</button>
-                    <button type="button" id="logoutButton" class="btn-small" style="background: #757575;">خروج</button>
-                </div>
-            </div>
-
-            <!-- جدول التوفر التفصيلي للإدارة -->
-            <div class="bookings-container">
-                <h3>📅 جدول التوفر التفصيلي</h3>
-                
-                <!-- تنقل الشهور -->
-                <div class="month-controls" style="display: flex; justify-content: space-between; align-items: center; margin: 1rem 0; background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px;">
-                    <button type="button" id="adminPrevMonth" class="btn-small">← الشهر السابق</button>
-                    <span id="adminCurrentMonth" style="font-weight: bold; font-size: 1.1rem;">جاري التحميل...</span>
-                    <button type="button" id="adminNextMonth" class="btn-small">الشهر التالي →</button>
-                </div>
-                
-                <!-- جدول الحجوزات التفصيلي -->
-                <div class="detailed-calendar" style="background: rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; margin-bottom: 2rem;">
-                    <div style="overflow-x: auto;">
-                        <table id="adminCalendarTable" style="width: 100%; border-collapse: collapse;">
-                            <thead>
-                                <tr style="background: rgba(255,255,255,0.1);">
-                                    <th style="padding: 1rem; border: 1px solid rgba(255,255,255,0.2); text-align: center;">التاريخ
+        <!-- لوحة الإدارة (مخفية في البداية) -->
+        <div id="adminDashboard" class="admin-container" style="display: none;">
+           <div class="admin-tabs">
+    <div class="tab-card active" data-filter="all">
+        <h3>جميع الحجوزات</h3>
+        <span id="totalBookings">0</span>
+    </div>
+    <div class="tab-card" data-filter="confirmed">
+        <h3>المؤكدة</h3>
+        <span id="confirmedBookings">0</span>
+    </div>
+    <div class="tab-card" data-filter="pending">
+        <h3>في الانتظار</h3>
+        <span id="pendingBookings">0</span>
+    </div>
+    <div class="tab-card" data-filter="cancelled">
+        <h3>الملغية</h3>
+        <span id="cancelledBookings">0</span>
+    </div>
+</div>
+<!-- تقويم الإدارة -->
+<div class="admin-calendar-section">
+    <h2>تقويم الحجوزات التفصيلي</h2>
+    <div class="admin-calendar-container">
+        <div class="calendar-header">
+            <button id="adminPrevMonth" class="nav-btn">‹</button>
+            <h3 id="adminCurrentMonth">يونيو 2025</h3>
+            <button id="adminNextMonth" class="nav-btn">›</button>
         </div>
+        <div id="admin-calendar-grid" class="admin-calendar-grid"></div>
+    </div>
+</div>
+            <div class="bookings-table">
+                <h2>جميع الحجوزات</h2>
+                <button id="refreshBookings">تحديث الحجوزات</button>
+                <button id="logoutBtn" class="logout-btn">تسجيل خروج</button>
+                <div id="bookingsList"></div>
+            </div>
+        </div>
+        <!-- نافذة تفاصيل اليوم -->
+<div id="dayDetailsModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalDate">تفاصيل اليوم</h3>
+            <span class="close" onclick="closeDayDetails()">&times;</span>
+        </div>
+        <div id="modalBookings" class="modal-body"></div>
+    </div>
+</div>
     </main>
 
     <!-- JavaScript -->

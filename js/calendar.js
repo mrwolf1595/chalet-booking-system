@@ -7,6 +7,7 @@ async function loadBookings() {
         bookingsSnapshot.forEach(doc => {
             const data = doc.data();
             if (data.status === 'confirmed' || data.status === 'pending') {
+                console.log('تاريخ محجوز:', data.date, 'الحالة:', data.status);
                 bookedDates.push(data.date);
             }
         });
@@ -21,6 +22,8 @@ async function loadBookings() {
 // التحقق من توفر التاريخ
 async function checkDateAvailability(selectedDate) {
     const bookedDates = await loadBookings();
+    console.log('تحقق من التاريخ:', selectedDate);
+    console.log('التواريخ المحجوزة:', bookedDates);
     return !bookedDates.includes(selectedDate);
 }
 

@@ -20,13 +20,35 @@
     </header>
 
     <main>
-        <section id="hero">
-            <h2>مرحباً بك في نظام الحجز</h2>
-            <button id="testFirebase">اختبار الاتصال بقاعدة البيانات</button>
-                <a href="booking.html" class="booking-btn">احجز الآن</a>
-                <a href="admin.html" class="admin-btn">لوحة الإدارة</a>
-            <div id="status"></div>
-        </section>
+<section id="hero">
+    <h2>مرحباً بك في نظام الحجز</h2>
+    <div class="hero-buttons">
+        <a href="booking.html" class="booking-btn">احجز الآن</a>
+        <a href="admin.html" class="admin-btn">لوحة الإدارة</a>
+    </div>
+</section>
+
+<section id="availability-calendar">
+    <div class="calendar-container">
+        <h2>تقويم التوفر</h2>
+        <div class="calendar-header">
+            <button id="prevMonth" class="nav-btn">‹</button>
+            <h3 id="currentMonth">يونيو 2025</h3>
+            <button id="nextMonth" class="nav-btn">›</button>
+        </div>
+        <div class="calendar-legend">
+            <span class="legend-item"><span class="dot available"></span> متاح</span>
+            <span class="legend-item"><span class="dot booked"></span> محجوز</span>
+            <span class="legend-item"><span class="dot pending"></span> في الانتظار</span>
+        </div>
+        <div id="calendar-grid" class="calendar-grid"></div>
+    </div>
+</section>
+
+<section id="test-section" style="margin-top: 2rem;">
+    <button id="testFirebase">اختبار الاتصال بقاعدة البيانات</button>
+    <div id="status"></div>
+</section>
     </main>
 
     <!-- JavaScript -->
