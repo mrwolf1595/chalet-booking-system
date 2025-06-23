@@ -23,34 +23,62 @@
             <form id="bookingForm">
                 <div class="form-group">
                     <label for="date">تاريخ الحجز:</label>
-                    <input type="date" id="date" required onchange="displayAvailability(this)">
+                    <input type="date" id="date" required>
                     <div id="availability-status"></div>
-                    </div>
+                </div>
 
                 <div class="form-group">
                     <label for="customerName">الاسم الكامل:</label>
-                    <input type="text" id="customerName" required>
+                    <input type="text" id="customerName" required placeholder="أدخل الاسم الكامل">
                 </div>
 
                 <div class="form-group">
                     <label for="customerPhone">رقم الجوال:</label>
-                    <input type="tel" id="customerPhone" required>
+                    <input type="tel" id="customerPhone" required placeholder="05xxxxxxxx" maxlength="10">
                 </div>
 
                 <div class="form-group">
                     <label for="nationalId">رقم الهوية:</label>
-                    <input type="text" id="nationalId" required>
+                    <input type="text" id="nationalId" required placeholder="1xxxxxxxxx أو 2xxxxxxxxx" maxlength="10">
                 </div>
 
-                <button type="submit">إرسال طلب الحجز</button>
+                <div class="form-group">
+                    <label for="depositAmount">مبلغ العربون (ريال سعودي):</label>
+                    <input type="number" id="depositAmount" required placeholder="أدخل مبلغ العربون" min="50" max="5000" step="0.01">
+                    <small style="color: rgba(255,255,255,0.7); font-size: 0.85rem; display: block; margin-top: 5px;">
+                        الحد الأدنى: 50 ريال | الحد الأقصى: 5000 ريال
+                    </small>
+                    <div id="deposit-preview"></div>
+                </div>
+
+                <div style="background: rgba(255, 193, 7, 0.2); border: 1px solid #FFC107; border-radius: 10px; padding: 15px; margin: 20px 0; text-align: center;">
+                    <strong style="color: #FFD700;">💡 ملاحظة مهمة</strong><br>
+                    <small style="color: rgba(255,255,255,0.9); line-height: 1.5;">
+                        العربون المدفوع هو جزء من إجمالي تكلفة الحجز<br>
+                        سيتم تحديد المبلغ الإجمالي وإشعارك من قبل الإدارة عند تأكيد الحجز
+                    </small>
+                </div>
+
+                <button type="submit" style="background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%); position: relative; overflow: hidden;">
+                    <span style="position: relative; z-index: 1;">💳 إرسال طلب الحجز</span>
+                </button>
             </form>
 
             <div id="result"></div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="index.html" class="admin-btn" style="background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);">
+                    العودة للصفحة الرئيسية
+                </a>
+            </div>
         </div>
     </main>
 
+    <!-- Toast Container (سيتم إنشاؤه تلقائياً) -->
+
     <!-- JavaScript -->
     <script src="js/config.js"></script>
+    <script src="js/toast.js"></script>
     <script src="js/calendar.js"></script>
     <script src="js/booking.js"></script>
 </body>

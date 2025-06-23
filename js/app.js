@@ -127,36 +127,79 @@ document.getElementById('nextMonth').addEventListener('click', () => {
     renderCalendar();
 });
 
-// زر اختبار الاتصال بـ Firebase
-document.getElementById('testFirebase').addEventListener('click', async function () {
-    const statusDiv = document.getElementById('status');
-
+// اختبار الاتصال بـ Firebase مع نظام Toast
+document.getElementById('testFirebase').addEventListener('click', async function() {
+    // عرض Loading Toast
+    const loadingToast = showLoadingToast('جاري اختبار الاتصال بقاعدة البيانات...');
+    
     try {
+        // محاولة كتابة بيانات تجريبية
         const testDoc = await db.collection('test').add({
             message: 'Firebase يعمل بنجاح!',
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
-
-        statusDiv.innerHTML = `✅ تم الاتصال بنجاح!<br>معرف الوثيقة: ${testDoc.id}`;
-        statusDiv.className = 'success';
-
+        
+        // إغلاق Loading Toast
+        loadingToast.close();
+        
+        // عرض رسالة نجاح مع معرف الوثيقة
+        showFirebaseConnection();
+        
         console.log('Firebase working! Document ID:', testDoc.id);
+        
     } catch (error) {
-        statusDiv.innerHTML = `❌ خطأ في الاتصال: ${error.message}`;
-        statusDiv.className = 'error';
-
+        // إغلاق Loading Toast
+        loadingToast.close();
+        
+        // عرض رسالة خطأ
+        showFirebaseError(error.message);
+        
         console.error('Firebase error:', error);
     }
 });
 
-// عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', function () {
+// التحقق من تحميل Firebase
+document.addEventListener('DOMContentLoaded', function() {
     if (typeof firebase !== 'undefined') {
         console.log('✅ Firebase SDK loaded successfully');
-        loadBookedDates();
+        
+        // عرض رسالة ترحيب
+        setTimeout(() => {
+            showInfo('مرحباً بك في نظام حجز الشالية', 'أهلاً وسهلاً 🏖️');
+        }, 1000);
+        
     } else {
         console.error('❌ Firebase SDK not loaded');
-        document.getElementById('status').innerHTML = '❌ فشل في تحميل Firebase';
-        document.getElementById('status').className = 'error';
+        
+        // عرض رسالة خطأ
+        showError('فشل في تحميل Firebase SDK', 'خطأ في النظام');
     }
+});
+
+// مراقبة حالة الاتصال بالإنترنت
+window.addEventListener('online', function() {
+    showSuccess('تم استعادة الاتصال بالإنترنت', 'متصل مرة أخرى 🌐');
+});
+
+window.addEventListener('offline', function() {
+    showWarning('لا يوجد اتصال بالإنترنت', 'بدون إنترنت 📶');
+});
+
+// مراقبة أخطاء JavaScript العامة
+window.addEventListener('error', function(event) {
+    console.error('JavaScript Error:', event.error);
+    showError('حدث خطأ في النظام، يرجى إعادة تحميل الصفحة', 'خطأ غير متوقع');
+});
+
+// مراقبة الـ Promise rejections
+window.addEventListener('unhandledrejection', function(event) {
+    console.error('Unhandled Promise Rejection:', event.reason);
+    
+    if (event.reason && event.reason.code && event.reason.code.includes('firebase')) {
+        showFirebaseError(event.reason.message);
+    } else {
+        showError('حدث خطأ في معالجة البيانات', 'خطأ في النظام');
+    }
+    
+    event.preventDefault();
 });

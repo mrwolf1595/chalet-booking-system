@@ -2,6 +2,7 @@
 const SESSION_TIMEOUT = 15 * 60 * 1000; // 15 دقيقة بالميللي ثانية
 let sessionTimer;
 let lastActivityTime = Date.now();
+let isAuthHandlerActive = false; // منع تكرار معالج المصادقة
 
 // تجديد النشاط
 function updateActivity() {
@@ -17,7 +18,7 @@ function startSessionTimer() {
     sessionTimer = setTimeout(() => {
         // تسجيل خروج تلقائي
         firebase.auth().signOut();
-        alert('انتهت جلسة تسجيل الدخول. يرجى تسجيل الدخول مرة أخرى.');
+        showWarning('انتهت جلسة تسجيل الدخول. يرجى تسجيل الدخول مرة أخرى.', 'انتهت الجلسة');
     }, SESSION_TIMEOUT);
 }
 
@@ -34,15 +35,19 @@ function initActivityMonitoring() {
     startSessionTimer();
 }
 
-// التحقق من حالة تسجيل الدخول
+// التحقق من حالة تسجيل الدخول (تشغيل مرة واحدة فقط)
 firebase.auth().onAuthStateChanged(function(user) {
+    if (isAuthHandlerActive) return; // منع التشغيل المتكرر
+    
     if (user) {
         // المستخدم مسجل دخول
+        isAuthHandlerActive = true;
         showAdminDashboard();
-        initActivityMonitoring(); // بدء مراقبة النشاط
+        initActivityMonitoring();
         console.log('Admin logged in:', user.email);
     } else {
         // المستخدم غير مسجل دخول
+        isAuthHandlerActive = false;
         showLoginScreen();
         // إيقاف مراقبة النشاط
         if (sessionTimer) {
@@ -73,7 +78,7 @@ async function loadBookingsData() {
     try {
         const bookingsSnapshot = await db.collection('bookings').orderBy('createdAt', 'desc').get();
         
-        allBookingsData = []; // مسح البيانات السابقة
+        allBookingsData = [];
         let totalBookings = 0;
         let confirmedBookings = 0;
         let pendingBookings = 0;
@@ -83,7 +88,6 @@ async function loadBookingsData() {
             const booking = doc.data();
             const docId = doc.id;
             
-            // حفظ البيانات للفلترة
             allBookingsData.push({ ...booking, docId });
             
             totalBookings++;
@@ -103,11 +107,11 @@ async function loadBookingsData() {
         
     } catch (error) {
         console.error('Error loading bookings:', error);
-        document.getElementById('bookingsList').innerHTML = '<p class="error">خطأ في تحميل الحجوزات</p>';
+        showError('خطأ في تحميل الحجوزات: ' + error.message);
     }
 }
 
-// عرض الحجوزات المفلترة
+// عرض الحجوزات المفلترة مع المبلغ الإجمالي
 function displayFilteredBookings(filter) {
     let filteredBookings = allBookingsData;
     
@@ -118,7 +122,6 @@ function displayFilteredBookings(filter) {
     let bookingsHTML = '';
     
     filteredBookings.forEach(booking => {
-        // تعديل عرض التاريخ الميلادي والهجري
         let createdDate = 'غير محدد';
         if (booking.createdAt) {
             const createdDateTime = booking.createdAt.toDate();
@@ -134,12 +137,19 @@ function displayFilteredBookings(filter) {
                     <strong>العميل:</strong> ${booking.customerName}<br>
                     <strong>الهاتف:</strong> ${booking.customerPhone || 'غير محدد'}<br>
                     <strong>التاريخ:</strong> ${booking.date}<br>
+                    <strong>العربون المدفوع:</strong> ${booking.depositAmount || 'غير محدد'} ريال<br>
+                    <strong>إجمالي المبلغ:</strong> ${booking.totalAmount || 'غير محدد'} ريال<br>
                     <strong>الحالة:</strong> <span class="status-${booking.status}">${getStatusText(booking.status)}</span><br>
-                    <strong>تاريخ الحجز:</strong> ${createdDate}<br>
-                    <strong>المبلغ:</strong> ${booking.totalAmount || 'غير محدد'} ريال
+                    <strong>تاريخ الحجز:</strong> ${createdDate}
                 </div>
                 <div class="booking-actions">
                     ${booking.status === 'pending' ? `
+                        <div style="margin-bottom: 10px;">
+                            <label style="display: block; margin-bottom: 5px; color: white; font-size: 14px;">إجمالي المبلغ (ريال):</label>
+                            <input type="number" id="totalAmount_${booking.docId}" placeholder="أدخل المبلغ الإجمالي" 
+                                   style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 120px; margin-bottom: 10px;"
+                                   value="${booking.totalAmount || ''}">
+                        </div>
                         <button onclick="updateBookingStatus('${booking.docId}', 'confirmed')" class="confirm-btn">تأكيد</button>
                         <button onclick="updateBookingStatus('${booking.docId}', 'cancelled')" class="cancel-btn">إلغاء</button>
                     ` : booking.status === 'confirmed' ? `
@@ -155,20 +165,35 @@ function displayFilteredBookings(filter) {
     document.getElementById('bookingsList').innerHTML = bookingsHTML || `<p>لا توجد حجوزات ${getFilterText(filter)}</p>`;
 }
 
-// تحديث حالة الحجز
+// تحديث حالة الحجز مع المبلغ الإجمالي
 async function updateBookingStatus(docId, newStatus) {
     try {
-        await db.collection('bookings').doc(docId).update({
+        const updateData = {
             status: newStatus,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+        };
         
-        alert(`تم ${newStatus === 'confirmed' ? 'تأكيد' : 'إلغاء'} الحجز بنجاح`);
+        // إذا كان التأكيد، أضف المبلغ الإجمالي
+        if (newStatus === 'confirmed') {
+            const totalAmountInput = document.getElementById(`totalAmount_${docId}`);
+            if (totalAmountInput && totalAmountInput.value) {
+                updateData.totalAmount = parseFloat(totalAmountInput.value);
+            }
+        }
+        
+        await db.collection('bookings').doc(docId).update(updateData);
+        
+        if (newStatus === 'confirmed') {
+            showSuccess(`تم تأكيد الحجز بنجاح${updateData.totalAmount ? ` بمبلغ ${updateData.totalAmount} ريال` : ''}`, 'تم التأكيد');
+        } else {
+            showWarning('تم إلغاء الحجز', 'تم الإلغاء');
+        }
+        
         loadBookingsData(); // إعادة تحميل البيانات
         
     } catch (error) {
         console.error('Error updating booking:', error);
-        alert('حدث خطأ في تحديث الحجز');
+        showError('حدث خطأ في تحديث الحجز: ' + error.message);
     }
 }
 
@@ -195,30 +220,55 @@ function getFilterText(filter) {
 // معالجة الأحداث
 document.addEventListener('DOMContentLoaded', function() {
     
-    // تسجيل الدخول
+    // تسجيل الدخول (تشغيل مرة واحدة فقط)
+    let isLoginFormHandled = false;
     document.getElementById('loginForm').addEventListener('submit', async function(e) {
         e.preventDefault();
+        
+        if (isLoginFormHandled) return; // منع التشغيل المتكرر
+        isLoginFormHandled = true;
         
         const email = document.getElementById('adminEmail').value;
         const password = document.getElementById('adminPassword').value;
         const errorDiv = document.getElementById('loginError');
         
+        const loadingToast = showLoadingToast('جاري تسجيل الدخول...');
+        
         try {
             await firebase.auth().signInWithEmailAndPassword(email, password);
+            loadingToast.close();
             errorDiv.innerHTML = '';
+            // لا نعرض Toast هنا لأن onAuthStateChanged سيتولى الأمر
         } catch (error) {
+            loadingToast.close();
             errorDiv.innerHTML = `<p class="error">خطأ في تسجيل الدخول: ${error.message}</p>`;
+            showError('خطأ في بيانات تسجيل الدخول', 'فشل تسجيل الدخول');
         }
+        
+        setTimeout(() => {
+            isLoginFormHandled = false;
+        }, 2000);
     });
     
     // تسجيل الخروج
     document.getElementById('logoutBtn').addEventListener('click', function() {
-        firebase.auth().signOut();
+        showConfirm(
+            'هل أنت متأكد من تسجيل الخروج؟',
+            'تسجيل الخروج',
+            () => {
+                firebase.auth().signOut();
+                showInfo('تم تسجيل الخروج بنجاح', 'وداعاً');
+            }
+        );
     });
     
     // زر التحديث
     document.getElementById('refreshBookings').addEventListener('click', function() {
-        loadBookingsData();
+        const loadingToast = showLoadingToast('جاري تحديث البيانات...');
+        loadBookingsData().then(() => {
+            loadingToast.close();
+            showSuccess('تم تحديث البيانات بنجاح', 'تحديث مكتمل');
+        });
     });
     
     // النقر على التبويبات
@@ -238,6 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
 // متغيرات تقويم الإدارة
 let adminCurrentDate = new Date();
 
@@ -274,7 +325,7 @@ function renderAdminCalendar() {
     
     // إضافة أيام الشهر
     const currentDateObj = new Date();
-    for (let i = 0; i < 42; i++) { // 6 أسابيع × 7 أيام
+    for (let i = 0; i < 42; i++) {
         const cellDate = new Date(startDate);
         cellDate.setDate(startDate.getDate() + i);
         
@@ -291,7 +342,6 @@ function renderAdminCalendar() {
             dayElement.classList.add('today');
         }
         
-        // إصلاح مشكلة التوقيت
         const year = cellDate.getFullYear();
         const monthStr = String(cellDate.getMonth() + 1).padStart(2, '0');
         const dayStr = String(cellDate.getDate()).padStart(2, '0');
@@ -317,7 +367,7 @@ function renderAdminCalendar() {
             const bookingsContainer = document.createElement('div');
             bookingsContainer.className = 'day-bookings';
             
-            dayBookings.slice(0, 2).forEach(booking => { // أظهر أول حجزين فقط
+            dayBookings.slice(0, 2).forEach(booking => {
                 const bookingMini = document.createElement('div');
                 bookingMini.className = `booking-item-mini ${booking.status}`;
                 bookingMini.textContent = booking.customerName;
@@ -343,20 +393,18 @@ function renderAdminCalendar() {
     }
 }
 
+// باقي الدوال تبقى كما هي...
 // عرض تفاصيل اليوم
 function showDayDetails(dateString, bookings) {
     const modal = document.getElementById('dayDetailsModal');
     const modalDate = document.getElementById('modalDate');
     const modalBookings = document.getElementById('modalBookings');
     
-    // تنسيق التاريخ
     const [year, month, day] = dateString.split('-');
     const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
     
-    // التاريخ الميلادي
     const gregorianDate = `${day}/${month}/${year}`;
     
-    // التاريخ الهجري
     let hijriDate = '';
     try {
         hijriDate = date.toLocaleDateString('ar-SA-u-ca-islamic', {
@@ -365,8 +413,7 @@ function showDayDetails(dateString, bookings) {
             year: 'numeric'
         });
     } catch (error) {
-        // إذا فشل الهجري، استخدم تحويل تقريبي
-        const hijriYear = parseInt(year) - 578; // تحويل تقريبي
+        const hijriYear = parseInt(year) - 578;
         hijriDate = `${day} من الشهر ${parseInt(month)} سنة ${hijriYear} هـ`;
     }
     
@@ -403,13 +450,19 @@ function showDayDetails(dateString, bookings) {
                         <strong>العميل:</strong> ${booking.customerName}<br>
                         <strong>الهاتف:</strong> ${booking.customerPhone || 'غير محدد'}<br>
                         <strong>رقم الهوية:</strong> ${booking.nationalId || 'غير محدد'}<br>
+                        <strong>العربون:</strong> ${booking.depositAmount || 'غير محدد'} ريال<br>
+                        <strong>إجمالي المبلغ:</strong> ${booking.totalAmount || 'غير محدد'} ريال<br>
                         <strong>الحالة:</strong> <span style="color: ${getStatusColor(booking.status)}">${getStatusText(booking.status)}</span><br>
-                        <strong>تاريخ الحجز:</strong> ${createdDate}<br>
-                        <strong>المبلغ:</strong> ${booking.totalAmount || 'غير محدد'} ريال
+                        <strong>تاريخ الحجز:</strong> ${createdDate}
                     </div>
                     <div class="modal-booking-actions">
                         ${booking.status === 'pending' ? `
-                            <button onclick="updateBookingStatus('${booking.docId}', 'confirmed')" class="confirm-btn">تأكيد</button>
+                            <div style="margin-bottom: 10px;">
+                                <input type="number" id="modalTotalAmount_${booking.docId}" placeholder="إجمالي المبلغ" 
+                                       style="padding: 5px; border-radius: 5px; border: 1px solid #ccc; width: 100px;"
+                                       value="${booking.totalAmount || ''}">
+                            </div>
+                            <button onclick="updateBookingStatusFromModal('${booking.docId}', 'confirmed')" class="confirm-btn">تأكيد</button>
                             <button onclick="updateBookingStatus('${booking.docId}', 'cancelled')" class="cancel-btn">إلغاء</button>
                         ` : booking.status === 'confirmed' ? `
                             <button onclick="updateBookingStatus('${booking.docId}', 'cancelled')" class="cancel-btn">إلغاء</button>
@@ -422,6 +475,21 @@ function showDayDetails(dateString, bookings) {
     }
     
     modal.style.display = 'block';
+}
+
+// تحديث الحجز من المودال
+async function updateBookingStatusFromModal(docId, newStatus) {
+    const totalAmountInput = document.getElementById(`modalTotalAmount_${docId}`);
+    const totalAmount = totalAmountInput ? totalAmountInput.value : '';
+    
+    // استخدام نفس دالة التحديث ولكن نحديث المدخل أولاً
+    if (totalAmount) {
+        const mainInput = document.getElementById(`totalAmount_${docId}`);
+        if (mainInput) mainInput.value = totalAmount;
+    }
+    
+    await updateBookingStatus(docId, newStatus);
+    closeDayDetails();
 }
 
 // إغلاق نافذة التفاصيل
@@ -467,110 +535,3 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-
-// تحديث عرض الوقت المتبقي
-function updateSessionDisplay() {
-    const timeRemaining = Math.max(0, SESSION_TIMEOUT - (Date.now() - lastActivityTime));
-    const minutes = Math.floor(timeRemaining / 60000);
-    const seconds = Math.floor((timeRemaining % 60000) / 1000);
-    
-    const timeDisplay = document.getElementById('timeRemaining');
-    const sessionTimer = document.getElementById('sessionTimer');
-    
-    if (timeDisplay) {
-        timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        
-        // تحذير عند بقاء 3 دقائق أو أقل
-        if (timeRemaining <= 3 * 60 * 1000) {
-            sessionTimer.classList.add('warning');
-        } else {
-            sessionTimer.classList.remove('warning');
-        }
-    }
-}
-
-// بدء عداد العرض
-function startDisplayTimer() {
-    setInterval(updateSessionDisplay, 1000); // تحديث كل ثانية
-}
-
-// تحديث دالة showAdminDashboard
-const originalShowAdminDashboard = showAdminDashboard;
-showAdminDashboard = function() {
-    originalShowAdminDashboard();
-    startDisplayTimer(); // بدء عرض المؤقت
-};
-
-// تحديث دالة updateActivity لتجديد العرض
-const originalUpdateActivity = updateActivity;
-updateActivity = function() {
-    originalUpdateActivity();
-    updateSessionDisplay(); // تحديث العرض فوراً
-};
-
-// تسجيل الخروج عند مغادرة الصفحة
-function setupPageExitHandler() {
-    // عند إغلاق الصفحة أو الانتقال لصفحة أخرى
-    window.addEventListener('beforeunload', function(e) {
-        firebase.auth().signOut();
-    });
-    
-    // عند استخدام زر الرجوع في المتصفح
-    window.addEventListener('pagehide', function(e) {
-        firebase.auth().signOut();
-    });
-    
-    // عند فقدان التركيز على النافذة لفترة طويلة
-    let windowBlurred = false;
-    let blurTimeout;
-    
-    window.addEventListener('blur', function() {
-        windowBlurred = true;
-        // تسجيل خروج بعد 30 ثانية من فقدان التركيز
-        blurTimeout = setTimeout(() => {
-            if (windowBlurred) {
-                firebase.auth().signOut();
-                alert('تم تسجيل الخروج لأسباب أمنية (فقدان التركيز على النافذة)');
-            }
-        }, 30000);
-    });
-    
-    window.addEventListener('focus', function() {
-        windowBlurred = false;
-        if (blurTimeout) {
-            clearTimeout(blurTimeout);
-        }
-    });
-    
-    // عند الضغط على أي رابط خارجي
-    document.addEventListener('click', function(e) {
-        const link = e.target.closest('a');
-        if (link && link.href && !link.href.includes('admin.html')) {
-            // إذا كان الرابط يؤدي لصفحة أخرى
-            firebase.auth().signOut();
-        }
-    });
-}
-
-// تحديث دالة showAdminDashboard لتشمل إعداد المعالجات
-const originalShowAdminDashboard2 = showAdminDashboard;
-showAdminDashboard = function() {
-    originalShowAdminDashboard2();
-    setupPageExitHandler(); // إعداد معالجات المغادرة
-};
-
-// إضافة تحذير قبل مغادرة الصفحة
-function setupExitWarning() {
-    window.addEventListener('beforeunload', function(e) {
-        const confirmationMessage = 'هل أنت متأكد من مغادرة صفحة الإدارة؟ سيتم تسجيل خروجك تلقائياً.';
-        e.returnValue = confirmationMessage;
-        return confirmationMessage;
-    });
-}
-
-// تحديث دالة showAdminDashboard مرة أخرى
-const originalShowAdminDashboard3 = showAdminDashboard;
-showAdminDashboard = function() {
-    originalShowAdminDashboard3();
-    setupExitWarning(); // إضافة التحذير
-};

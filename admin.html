@@ -23,74 +23,89 @@
         <!-- شاشة تسجيل الدخول -->
         <div id="loginScreen" class="login-container">
             <h2>تسجيل دخول الإدارة</h2>
-<form id="loginForm">
-    <div class="form-group">
-        <label for="adminEmail">البريد الإلكتروني:</label>
-        <input type="email" id="adminEmail" required>
-    </div>
-    <div class="form-group">
-        <label for="adminPassword">كلمة المرور:</label>
-        <input type="password" id="adminPassword" required>
-    </div>
-    <button type="submit">دخول</button>
-</form>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="adminEmail">البريد الإلكتروني:</label>
+                    <input type="email" id="adminEmail" required placeholder="admin@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">كلمة المرور:</label>
+                    <input type="password" id="adminPassword" required placeholder="••••••••">
+                </div>
+                <button type="submit">دخول</button>
+            </form>
             <div id="loginError"></div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="index.html" class="admin-btn" style="background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);">
+                    العودة للصفحة الرئيسية
+                </a>
+            </div>
         </div>
 
         <!-- لوحة الإدارة (مخفية في البداية) -->
         <div id="adminDashboard" class="admin-container" style="display: none;">
-           <div class="admin-tabs">
-    <div class="tab-card active" data-filter="all">
-        <h3>جميع الحجوزات</h3>
-        <span id="totalBookings">0</span>
-    </div>
-    <div class="tab-card" data-filter="confirmed">
-        <h3>المؤكدة</h3>
-        <span id="confirmedBookings">0</span>
-    </div>
-    <div class="tab-card" data-filter="pending">
-        <h3>في الانتظار</h3>
-        <span id="pendingBookings">0</span>
-    </div>
-    <div class="tab-card" data-filter="cancelled">
-        <h3>الملغية</h3>
-        <span id="cancelledBookings">0</span>
-    </div>
-</div>
-<!-- تقويم الإدارة -->
-<div class="admin-calendar-section">
-    <h2>تقويم الحجوزات التفصيلي</h2>
-    <div class="admin-calendar-container">
-        <div class="calendar-header">
-            <button id="adminPrevMonth" class="nav-btn">‹</button>
-            <h3 id="adminCurrentMonth">يونيو 2025</h3>
-            <button id="adminNextMonth" class="nav-btn">›</button>
-        </div>
-        <div id="admin-calendar-grid" class="admin-calendar-grid"></div>
-    </div>
-</div>
+            <!-- إحصائيات الحجوزات -->
+            <div class="admin-tabs">
+                <div class="tab-card active" data-filter="all">
+                    <h3>جميع الحجوزات</h3>
+                    <span id="totalBookings">0</span>
+                </div>
+                <div class="tab-card" data-filter="confirmed">
+                    <h3>المؤكدة</h3>
+                    <span id="confirmedBookings">0</span>
+                </div>
+                <div class="tab-card" data-filter="pending">
+                    <h3>في الانتظار</h3>
+                    <span id="pendingBookings">0</span>
+                </div>
+                <div class="tab-card" data-filter="cancelled">
+                    <h3>الملغية</h3>
+                    <span id="cancelledBookings">0</span>
+                </div>
+            </div>
+
+            <!-- تقويم الإدارة -->
+            <div class="admin-calendar-section">
+                <h2>تقويم الحجوزات التفصيلي</h2>
+                <div class="admin-calendar-container">
+                    <div class="calendar-header">
+                        <button id="adminPrevMonth" class="nav-btn">‹</button>
+                        <h3 id="adminCurrentMonth">يونيو 2025</h3>
+                        <button id="adminNextMonth" class="nav-btn">›</button>
+                    </div>
+                    <div id="admin-calendar-grid" class="admin-calendar-grid"></div>
+                </div>
+            </div>
+
+            <!-- جدول الحجوزات -->
             <div class="bookings-table">
                 <h2>جميع الحجوزات</h2>
-                <button id="refreshBookings">تحديث الحجوزات</button>
-
-                <button id="logoutBtn" class="logout-btn">تسجيل خروج</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+                    <button id="refreshBookings">تحديث الحجوزات</button>
+                    <button id="logoutBtn" class="logout-btn">تسجيل خروج</button>
+                </div>
                 <div id="bookingsList"></div>
             </div>
         </div>
+
         <!-- نافذة تفاصيل اليوم -->
-<div id="dayDetailsModal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 id="modalDate">تفاصيل اليوم</h3>
-            <span class="close" onclick="closeDayDetails()">&times;</span>
+        <div id="dayDetailsModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalDate">تفاصيل اليوم</h3>
+                    <span class="close" onclick="closeDayDetails()">&times;</span>
+                </div>
+                <div id="modalBookings" class="modal-body"></div>
+            </div>
         </div>
-        <div id="modalBookings" class="modal-body"></div>
-    </div>
-</div>
     </main>
+
+    <!-- Toast Container (سيتم إنشاؤه تلقائياً) -->
 
     <!-- JavaScript -->
     <script src="js/config.js"></script>
+    <script src="js/toast.js"></script>
     <script src="js/admin.js"></script>
 </body>
 </html>
