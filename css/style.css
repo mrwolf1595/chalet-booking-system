@@ -686,3 +686,30 @@ button:hover {
         width: 95%;
     }
 }
+
+/* مؤشر الجلسة */
+.session-timer {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 193, 7, 0.2);
+    border: 1px solid #FFC107;
+    color: #FFC107;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    margin: 0 1rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.session-timer.warning {
+    background: rgba(244, 67, 54, 0.2);
+    border-color: #f44336;
+    color: #f44336;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}

@@ -1,12 +1,53 @@
+// إعدادات الجلسة
+const SESSION_TIMEOUT = 15 * 60 * 1000; // 15 دقيقة بالميللي ثانية
+let sessionTimer;
+let lastActivityTime = Date.now();
+
+// تجديد النشاط
+function updateActivity() {
+    lastActivityTime = Date.now();
+    if (sessionTimer) {
+        clearTimeout(sessionTimer);
+    }
+    startSessionTimer();
+}
+
+// بدء مؤقت الجلسة
+function startSessionTimer() {
+    sessionTimer = setTimeout(() => {
+        // تسجيل خروج تلقائي
+        firebase.auth().signOut();
+        alert('انتهت جلسة تسجيل الدخول. يرجى تسجيل الدخول مرة أخرى.');
+    }, SESSION_TIMEOUT);
+}
+
+// مراقبة النشاط
+function initActivityMonitoring() {
+    // مراقبة حركة الماوس والنقر والكتابة
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+    
+    events.forEach(event => {
+        document.addEventListener(event, updateActivity, true);
+    });
+    
+    // بدء المؤقت
+    startSessionTimer();
+}
+
 // التحقق من حالة تسجيل الدخول
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         // المستخدم مسجل دخول
         showAdminDashboard();
+        initActivityMonitoring(); // بدء مراقبة النشاط
         console.log('Admin logged in:', user.email);
     } else {
         // المستخدم غير مسجل دخول
         showLoginScreen();
+        // إيقاف مراقبة النشاط
+        if (sessionTimer) {
+            clearTimeout(sessionTimer);
+        }
     }
 });
 
@@ -426,3 +467,110 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// تحديث عرض الوقت المتبقي
+function updateSessionDisplay() {
+    const timeRemaining = Math.max(0, SESSION_TIMEOUT - (Date.now() - lastActivityTime));
+    const minutes = Math.floor(timeRemaining / 60000);
+    const seconds = Math.floor((timeRemaining % 60000) / 1000);
+    
+    const timeDisplay = document.getElementById('timeRemaining');
+    const sessionTimer = document.getElementById('sessionTimer');
+    
+    if (timeDisplay) {
+        timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+        // تحذير عند بقاء 3 دقائق أو أقل
+        if (timeRemaining <= 3 * 60 * 1000) {
+            sessionTimer.classList.add('warning');
+        } else {
+            sessionTimer.classList.remove('warning');
+        }
+    }
+}
+
+// بدء عداد العرض
+function startDisplayTimer() {
+    setInterval(updateSessionDisplay, 1000); // تحديث كل ثانية
+}
+
+// تحديث دالة showAdminDashboard
+const originalShowAdminDashboard = showAdminDashboard;
+showAdminDashboard = function() {
+    originalShowAdminDashboard();
+    startDisplayTimer(); // بدء عرض المؤقت
+};
+
+// تحديث دالة updateActivity لتجديد العرض
+const originalUpdateActivity = updateActivity;
+updateActivity = function() {
+    originalUpdateActivity();
+    updateSessionDisplay(); // تحديث العرض فوراً
+};
+
+// تسجيل الخروج عند مغادرة الصفحة
+function setupPageExitHandler() {
+    // عند إغلاق الصفحة أو الانتقال لصفحة أخرى
+    window.addEventListener('beforeunload', function(e) {
+        firebase.auth().signOut();
+    });
+    
+    // عند استخدام زر الرجوع في المتصفح
+    window.addEventListener('pagehide', function(e) {
+        firebase.auth().signOut();
+    });
+    
+    // عند فقدان التركيز على النافذة لفترة طويلة
+    let windowBlurred = false;
+    let blurTimeout;
+    
+    window.addEventListener('blur', function() {
+        windowBlurred = true;
+        // تسجيل خروج بعد 30 ثانية من فقدان التركيز
+        blurTimeout = setTimeout(() => {
+            if (windowBlurred) {
+                firebase.auth().signOut();
+                alert('تم تسجيل الخروج لأسباب أمنية (فقدان التركيز على النافذة)');
+            }
+        }, 30000);
+    });
+    
+    window.addEventListener('focus', function() {
+        windowBlurred = false;
+        if (blurTimeout) {
+            clearTimeout(blurTimeout);
+        }
+    });
+    
+    // عند الضغط على أي رابط خارجي
+    document.addEventListener('click', function(e) {
+        const link = e.target.closest('a');
+        if (link && link.href && !link.href.includes('admin.html')) {
+            // إذا كان الرابط يؤدي لصفحة أخرى
+            firebase.auth().signOut();
+        }
+    });
+}
+
+// تحديث دالة showAdminDashboard لتشمل إعداد المعالجات
+const originalShowAdminDashboard2 = showAdminDashboard;
+showAdminDashboard = function() {
+    originalShowAdminDashboard2();
+    setupPageExitHandler(); // إعداد معالجات المغادرة
+};
+
+// إضافة تحذير قبل مغادرة الصفحة
+function setupExitWarning() {
+    window.addEventListener('beforeunload', function(e) {
+        const confirmationMessage = 'هل أنت متأكد من مغادرة صفحة الإدارة؟ سيتم تسجيل خروجك تلقائياً.';
+        e.returnValue = confirmationMessage;
+        return confirmationMessage;
+    });
+}
+
+// تحديث دالة showAdminDashboard مرة أخرى
+const originalShowAdminDashboard3 = showAdminDashboard;
+showAdminDashboard = function() {
+    originalShowAdminDashboard3();
+    setupExitWarning(); // إضافة التحذير
+};
