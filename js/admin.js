@@ -610,7 +610,7 @@ function showDayDetails(dateString, bookings) {
     modalDate.innerHTML = `
         <div style="text-align: center;" class="day-details-animation">
             <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">حجوزات اليوم</div>
-            <div style="font-size: 0.85rem; color: rgba(255,255,255,0.9); line-height: 1.4;">
+            <div style="font-size: 0.85rem; color: rgba(243, 8, 8, 0.9); line-height: 1.4;">
                 📅 الميلادي: ${gregorianDate}<br>
                 🌙 الهجري: ${hijriDate}
             </div>
@@ -619,7 +619,7 @@ function showDayDetails(dateString, bookings) {
     
     if (bookings.length === 0) {
         modalBookings.innerHTML = `
-            <div style="text-align: center; color: rgba(255,255,255,0.7); padding: 2rem;" class="day-details-animation">
+            <div style="text-align: center; color: rgba(243, 8, 8, 0.9); padding: 2rem;" class="day-details-animation">
                 <div style="font-size: 3rem; margin-bottom: 1rem;">📅</div>
                 <p>لا توجد حجوزات في هذا اليوم</p>
                 <small style="opacity: 0.7;">يمكن إضافة حجز جديد لهذا التاريخ</small>
