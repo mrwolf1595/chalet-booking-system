@@ -26,18 +26,26 @@
     --shadow-medium: 0 8px 15px rgba(0, 0, 0, 0.15);
     --shadow-heavy: 0 15px 35px rgba(0, 0, 0, 0.2);
     
-    /* المسافات */
+    /* المسافات - محسنة للجوال */
     --space-xs: 0.5rem;
-    --space-sm: 1rem;
-    --space-md: 1.5rem;
-    --space-lg: 2rem;
-    --space-xl: 3rem;
+    --space-sm: 0.75rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
     
     /* الحواف المدورة */
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 24px;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
+    
+    /* أحجام الخطوط للجوال */
+    --font-xs: 0.75rem;
+    --font-sm: 0.875rem;
+    --font-base: 1rem;
+    --font-lg: 1.125rem;
+    --font-xl: 1.25rem;
+    --font-2xl: 1.5rem;
 }
 
 /* ===== تصميم الجسم الأساسي ===== */
@@ -48,6 +56,7 @@ body {
     line-height: 1.6;
     min-height: 100vh;
     position: relative;
+    font-size: var(--font-base);
 }
 
 /* إضافة نقشة خفيفة في الخلفية */
@@ -65,7 +74,7 @@ body::before {
     z-index: -1;
 }
 
-/* ===== تصميم الرأس ===== */
+/* ===== تصميم الرأس - محسن للجوال ===== */
 header {
     text-align: center;
     padding: var(--space-lg);
@@ -76,7 +85,7 @@ header {
 }
 
 header h1 {
-    font-size: 2.5rem;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
     font-weight: 700;
     margin-bottom: var(--space-sm);
     color: var(--text-light);
@@ -89,33 +98,34 @@ header h1::before {
 }
 
 header p {
-    font-size: 1.2rem;
+    font-size: clamp(0.9rem, 3vw, 1.2rem);
     font-weight: 400;
     color: rgba(255, 255, 255, 0.9);
     margin-top: var(--space-xs);
 }
 
-/* ===== التخطيط الرئيسي ===== */
+/* ===== التخطيط الرئيسي - محسن للجوال ===== */
 main {
     max-width: 1200px;
     margin: 0 auto;
-    padding: var(--space-lg);
+    padding: var(--space-md);
+    width: 100%;
 }
 
-/* ===== قسم البطل ===== */
+/* ===== قسم البطل - محسن للجوال ===== */
 #hero {
     text-align: center;
-    padding: var(--space-xl);
+    padding: var(--space-lg);
     background: var(--bg-overlay);
     backdrop-filter: blur(15px);
     border-radius: var(--radius-xl);
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-lg);
     box-shadow: var(--shadow-medium);
     color: var(--text-primary);
 }
 
 #hero h2 {
-    font-size: 2rem;
+    font-size: clamp(1.2rem, 3.5vw, 2rem);
     font-weight: 600;
     margin-bottom: var(--space-lg);
     color: var(--text-primary);
@@ -124,12 +134,12 @@ main {
 .hero-buttons {
     display: flex;
     justify-content: center;
-    gap: var(--space-lg);
+    gap: var(--space-md);
     flex-wrap: wrap;
     margin-top: var(--space-lg);
 }
 
-/* ===== تصميم الأزرار ===== */
+/* ===== تصميم الأزرار - محسن للجوال ===== */
 button, .booking-btn, .admin-btn {
     display: inline-flex;
     align-items: center;
@@ -139,7 +149,7 @@ button, .booking-btn, .admin-btn {
     color: white;
     border: none;
     padding: var(--space-md) var(--space-lg);
-    font-size: 1.1rem;
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
     font-weight: 500;
     font-family: 'Cairo', sans-serif;
     border-radius: var(--radius-md);
@@ -149,7 +159,9 @@ button, .booking-btn, .admin-btn {
     box-shadow: var(--shadow-medium);
     position: relative;
     overflow: hidden;
-    min-height: 50px;
+    min-height: 48px; /* للوصولية على الجوال */
+    min-width: 120px;
+    touch-action: manipulation; /* تحسين اللمس */
 }
 
 button:hover, .booking-btn:hover, .admin-btn:hover {
@@ -164,6 +176,8 @@ button:active, .booking-btn:active, .admin-btn:active {
 /* أنواع الأزرار المختلفة */
 .booking-btn {
     background: var(--secondary-gradient);
+    flex: 1;
+    max-width: 250px;
 }
 
 .booking-btn::after {
@@ -173,6 +187,8 @@ button:active, .booking-btn:active, .admin-btn:active {
 
 .admin-btn {
     background: var(--accent-gradient);
+    flex: 1;
+    max-width: 250px;
 }
 
 .admin-btn::after {
@@ -183,7 +199,8 @@ button:active, .booking-btn:active, .admin-btn:active {
 .confirm-btn {
     background: var(--success-gradient);
     padding: var(--space-sm) var(--space-md);
-    font-size: 0.9rem;
+    font-size: var(--font-sm);
+    min-height: 40px;
 }
 
 .confirm-btn::after {
@@ -193,7 +210,8 @@ button:active, .booking-btn:active, .admin-btn:active {
 .cancel-btn {
     background: var(--danger-gradient);
     padding: var(--space-sm) var(--space-md);
-    font-size: 0.9rem;
+    font-size: var(--font-sm);
+    min-height: 40px;
 }
 
 .cancel-btn::after {
@@ -217,13 +235,13 @@ button:active, .booking-btn:active, .admin-btn:active {
     content: ' 🔄';
 }
 
-/* ===== تصميم النماذج ===== */
+/* ===== تصميم النماذج - محسن للجوال ===== */
 .booking-container, .login-container {
-    max-width: 600px;
+    max-width: 100%;
     margin: 0 auto;
     background: var(--bg-overlay);
     border-radius: var(--radius-xl);
-    padding: var(--space-xl);
+    padding: var(--space-lg);
     box-shadow: var(--shadow-heavy);
     color: var(--text-primary);
 }
@@ -237,7 +255,7 @@ button:active, .booking-btn:active, .admin-btn:active {
     margin-bottom: var(--space-sm);
     font-weight: 600;
     color: var(--text-primary);
-    font-size: 1.1rem;
+    font-size: var(--font-lg);
 }
 
 /* أيقونات الحقول */
@@ -283,10 +301,11 @@ button:active, .booking-btn:active, .admin-btn:active {
     border-radius: var(--radius-md);
     background: white;
     color: var(--text-primary);
-    font-size: 1rem;
+    font-size: var(--font-base);
     font-family: 'Cairo', sans-serif;
     transition: all 0.3s ease;
     box-shadow: var(--shadow-light);
+    min-height: 48px; /* للوصولية على الجوال */
 }
 
 .form-group input:focus {
@@ -360,17 +379,17 @@ button:active, .booking-btn:active, .admin-btn:active {
     margin-left: var(--space-xs);
 }
 
-/* ===== تصميم التقويم ===== */
+/* ===== تصميم التقويم - محسن بالكامل للجوال مع التأثيرات ===== */
 #availability-calendar {
     margin: var(--space-xl) 0;
 }
 
 .calendar-container, .admin-calendar-container {
-    max-width: 900px;
+    max-width: 100%;
     margin: 0 auto;
     background: var(--bg-overlay);
     border-radius: var(--radius-xl);
-    padding: var(--space-xl);
+    padding: var(--space-lg);
     box-shadow: var(--shadow-heavy);
     color: var(--text-primary);
 }
@@ -379,7 +398,7 @@ button:active, .booking-btn:active, .admin-btn:active {
     text-align: center;
     margin-bottom: var(--space-lg);
     color: var(--text-primary);
-    font-size: 1.8rem;
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
     font-weight: 600;
 }
 
@@ -396,41 +415,51 @@ button:active, .booking-btn:active, .admin-btn:active {
     padding: var(--space-md);
     background: rgba(102, 126, 234, 0.1);
     border-radius: var(--radius-md);
+    gap: var(--space-sm);
 }
 
 .calendar-header h3 {
     color: var(--text-primary);
     margin: 0;
-    font-size: 1.4rem;
+    font-size: clamp(1rem, 3.5vw, 1.4rem);
     font-weight: 600;
+    text-align: center;
+    flex: 1;
 }
 
 .nav-btn {
     background: white;
     color: var(--text-primary);
     border: 2px solid #e0e0e0;
-    width: 45px;
-    height: 45px;
+    width: clamp(40px, 10vw, 45px);
+    height: clamp(40px, 10vw, 45px);
     border-radius: 50%;
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 3vw, 1.2rem);
     cursor: pointer;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: var(--shadow-light);
+    touch-action: manipulation;
+    flex-shrink: 0;
 }
 
-.nav-btn:hover {
+.nav-btn:hover, .nav-btn:focus {
     background: #667eea;
     color: white;
     transform: scale(1.1);
+    box-shadow: var(--shadow-medium);
+}
+
+.nav-btn:active {
+    transform: scale(0.95);
 }
 
 .calendar-legend {
     display: flex;
     justify-content: center;
-    gap: var(--space-lg);
+    gap: var(--space-sm);
     margin-bottom: var(--space-lg);
     flex-wrap: wrap;
     padding: var(--space-md);
@@ -441,21 +470,25 @@ button:active, .booking-btn:active, .admin-btn:active {
 .legend-item {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
+    gap: var(--space-xs);
     color: var(--text-primary);
-    font-size: 0.9rem;
+    font-size: var(--font-sm);
     font-weight: 500;
-    padding: var(--space-sm) var(--space-md);
+    padding: var(--space-xs) var(--space-sm);
     background: white;
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-light);
+    flex: 1;
+    min-width: 100px;
+    justify-content: center;
 }
 
 .dot {
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     display: inline-block;
+    flex-shrink: 0;
 }
 
 .dot.available {
@@ -470,7 +503,7 @@ button:active, .booking-btn:active, .admin-btn:active {
     background: var(--warning-gradient);
 }
 
-/* شبكة التقويم */
+/* ===== شبكة التقويم مع التأثيرات المحسنة ===== */
 .calendar-grid, .admin-calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -479,6 +512,8 @@ button:active, .booking-btn:active, .admin-btn:active {
     border-radius: var(--radius-md);
     overflow: hidden;
     box-shadow: var(--shadow-light);
+    margin: 0 auto;
+    max-width: 100%;
 }
 
 .calendar-day, .admin-calendar-day {
@@ -490,132 +525,174 @@ button:active, .booking-btn:active, .admin-btn:active {
     color: var(--text-primary);
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid #f0f0f0;
-    min-height: 45px;
+    min-height: clamp(40px, 12vw, 60px);
+    font-size: clamp(0.8rem, 2.5vw, 1rem);
+    position: relative;
+    overflow: hidden;
+    touch-action: manipulation;
 }
 
+/* ===== التأثيرات المحسنة للتقويم ===== */
 .calendar-day:hover, .admin-calendar-day:hover {
-    background: #f8f9fa;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     transform: scale(1.05);
+    z-index: 2;
+    box-shadow: var(--shadow-medium);
+    border-color: #667eea;
 }
 
 .calendar-day.header, .admin-calendar-day.header {
-    background: #667eea;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     font-weight: 600;
     cursor: default;
+    font-size: clamp(0.7rem, 2.2vw, 0.9rem);
 }
 
 .calendar-day.header:hover, .admin-calendar-day.header:hover {
     transform: none;
+    box-shadow: none;
 }
 
 .calendar-day.other-month {
     color: #bbb;
     background: #fafafa;
+    opacity: 0.6;
 }
 
+/* التأثيرات المطورة للأيام المتاحة */
 .calendar-day.available {
     background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
     color: #155724;
     border: 2px solid #28a745;
+    position: relative;
+    overflow: hidden;
+}
+
+.calendar-day.available::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.5s ease;
 }
 
 .calendar-day.available:hover {
     background: linear-gradient(135deg, #c3e6cb 0%, #b3d7c8 100%);
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+    border-color: #20c997;
 }
 
+.calendar-day.available:hover::before {
+    left: 100%;
+}
+
+.calendar-day.available:active {
+    transform: scale(0.95);
+}
+
+/* التأثيرات للأيام المحجوزة */
 .calendar-day.booked {
     background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
     color: #721c24;
     border: 2px solid #dc3545;
     cursor: not-allowed;
+    position: relative;
+}
+
+.calendar-day.booked::after {
+    content: '🚫';
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 0.6em;
+    opacity: 0.7;
 }
 
 .calendar-day.booked:hover {
     transform: none;
+    opacity: 0.8;
 }
 
+/* التأثيرات للأيام في الانتظار */
 .calendar-day.pending {
     background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
     color: #856404;
     border: 2px solid #ffc107;
+    position: relative;
+    animation: pulse 2s infinite;
 }
 
+.calendar-day.pending::after {
+    content: '⏳';
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 0.6em;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.calendar-day.pending:hover {
+    background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.3);
+}
+
+/* تأثير اليوم الحالي */
 .calendar-day.today {
     box-shadow: inset 0 0 0 3px #007bff;
     font-weight: 700;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    position: relative;
 }
 
-/* ===== تصميم الإدارة ===== */
-.admin-container {
-    max-width: 1400px;
-    margin: 0 auto;
+.calendar-day.today::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 48%, rgba(0,123,255,0.1) 50%, transparent 52%);
+    animation: shine 3s ease-in-out infinite;
 }
 
-.admin-tabs {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--space-lg);
-    margin-bottom: var(--space-xl);
+@keyframes shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
 }
 
-.tab-card {
-    background: var(--bg-overlay);
-    border-radius: var(--radius-lg);
-    padding: var(--space-lg);
-    text-align: center;
-    border: 2px solid #e0e0e0;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: var(--shadow-medium);
-    color: var(--text-primary);
-}
-
-.tab-card:hover {
-    border-color: #667eea;
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-heavy);
-}
-
-.tab-card.active {
-    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-    border-color: #28a745;
-}
-
-.tab-card h3 {
-    margin-bottom: var(--space-sm);
-    color: var(--text-primary);
-    font-size: 1.1rem;
-    font-weight: 600;
-}
-
-.tab-card span {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #667eea;
-    display: block;
-}
-
-.tab-card.active span {
-    color: #28a745;
-}
-
-/* تقويم الإدارة */
+/* ===== تصميم تقويم الإدارة المطور ===== */
 .admin-calendar-section {
     margin: var(--space-xl) 0;
     background: var(--bg-overlay);
     border-radius: var(--radius-xl);
-    padding: var(--space-xl);
+    padding: var(--space-lg);
     box-shadow: var(--shadow-heavy);
     color: var(--text-primary);
 }
 
 .admin-calendar-day {
-    min-height: 100px;
+    min-height: clamp(60px, 15vw, 100px);
     background: white;
-    padding: var(--space-sm);
+    padding: var(--space-xs);
     cursor: pointer;
     transition: all 0.3s ease;
     border: 1px solid #f0f0f0;
@@ -623,11 +700,19 @@ button:active, .booking-btn:active, .admin-btn:active {
     flex-direction: column;
     align-items: flex-start;
     overflow: hidden;
+    position: relative;
+}
+
+.admin-calendar-day:hover {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+    border-color: #667eea;
 }
 
 .admin-calendar-day.today {
     border: 2px solid #007bff;
-    background: #e3f2fd;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
 }
 
 .admin-calendar-day.other-month {
@@ -639,27 +724,36 @@ button:active, .booking-btn:active, .admin-btn:active {
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: var(--space-xs);
-    font-size: 1rem;
+    font-size: clamp(0.8rem, 2.5vw, 1rem);
+    align-self: flex-start;
 }
 
 .day-bookings {
-    font-size: 0.8rem;
+    font-size: clamp(0.6rem, 2vw, 0.8rem);
     width: 100%;
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
 }
 
 .booking-item-mini {
     background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
     border-right: 3px solid #28a745;
-    padding: var(--space-xs);
-    margin-bottom: var(--space-xs);
+    padding: 2px var(--space-xs);
     border-radius: var(--radius-sm);
     color: #155724;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 0.75rem;
+    font-size: clamp(0.6rem, 1.8vw, 0.75rem);
     line-height: 1.2;
+    transition: all 0.2s ease;
+}
+
+.booking-item-mini:hover {
+    transform: translateX(2px);
+    box-shadow: var(--shadow-light);
 }
 
 .booking-item-mini.pending {
@@ -681,31 +775,92 @@ button:active, .booking-btn:active, .admin-btn:active {
     background: var(--secondary-gradient);
     color: white;
     border-radius: 50%;
-    width: 22px;
-    height: 22px;
+    width: clamp(18px, 5vw, 22px);
+    height: clamp(18px, 5vw, 22px);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
+    font-size: clamp(0.6rem, 2vw, 0.75rem);
     font-weight: 600;
     box-shadow: var(--shadow-light);
+    z-index: 1;
 }
 
-/* ===== نظام التوست ===== */
+/* ===== تصميم الإدارة - محسن للجوال ===== */
+.admin-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.admin-tabs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.tab-card {
+    background: var(--bg-overlay);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md);
+    text-align: center;
+    border: 2px solid #e0e0e0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-medium);
+    color: var(--text-primary);
+    touch-action: manipulation;
+}
+
+.tab-card:hover {
+    border-color: #667eea;
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-heavy);
+}
+
+.tab-card.active {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border-color: #28a745;
+}
+
+.tab-card h3 {
+    margin-bottom: var(--space-sm);
+    color: var(--text-primary);
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    font-weight: 600;
+}
+
+.tab-card span {
+    font-size: clamp(1.5rem, 6vw, 2.5rem);
+    font-weight: 700;
+    color: #667eea;
+    display: block;
+}
+
+.tab-card.active span {
+    color: #28a745;
+}
+
+/* ===== نظام التوست - محسن للجوال ===== */
 .toast-container {
     position: fixed;
-    top: 20px;
-    left: 20px;
+    top: 10px;
+    left: 10px;
+    right: 10px;
     z-index: 10000;
     pointer-events: none;
-    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .toast {
     background: white;
     border-radius: var(--radius-md);
     padding: var(--space-md);
-    margin-bottom: var(--space-sm);
     box-shadow: var(--shadow-heavy);
     pointer-events: auto;
     transform: translateX(-100%);
@@ -713,6 +868,9 @@ button:active, .booking-btn:active, .admin-btn:active {
     opacity: 0;
     border-right: 4px solid #28a745;
     color: var(--text-primary);
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
 }
 
 .toast.show {
@@ -742,7 +900,7 @@ button:active, .booking-btn:active, .admin-btn:active {
 .toast-title {
     font-weight: 600;
     color: var(--text-primary);
-    font-size: 1rem;
+    font-size: var(--font-base);
     display: flex;
     align-items: center;
     gap: var(--space-xs);
@@ -771,13 +929,14 @@ button:active, .booking-btn:active, .admin-btn:active {
     font-size: 1.2rem;
     cursor: pointer;
     padding: 0;
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     transition: all 0.2s ease;
+    touch-action: manipulation;
 }
 
 .toast-close:hover {
@@ -787,23 +946,24 @@ button:active, .booking-btn:active, .admin-btn:active {
 
 .toast-message {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: var(--font-sm);
     line-height: 1.4;
 }
 
-/* جدول الحجوزات */
+/* ===== جدول الحجوزات - محسن للجوال ===== */
 .bookings-table {
     background: var(--bg-overlay);
     border-radius: var(--radius-xl);
-    padding: var(--space-xl);
+    padding: var(--space-lg);
     box-shadow: var(--shadow-heavy);
     color: var(--text-primary);
+    overflow-x: auto;
 }
 
 .bookings-table h2 {
     margin-bottom: var(--space-lg);
     color: var(--text-primary);
-    font-size: 1.8rem;
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
     display: flex;
     align-items: center;
     gap: var(--space-sm);
@@ -821,10 +981,12 @@ button:active, .booking-btn:active, .admin-btn:active {
     margin-bottom: var(--space-md);
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     transition: all 0.3s ease;
     box-shadow: var(--shadow-light);
     border-right: 4px solid #28a745;
+    flex-wrap: wrap;
+    gap: var(--space-md);
 }
 
 .booking-item:hover {
@@ -836,7 +998,8 @@ button:active, .booking-btn:active, .admin-btn:active {
     flex: 1;
     color: var(--text-primary);
     line-height: 1.6;
-    font-size: 1rem;
+    font-size: var(--font-sm);
+    min-width: 250px;
 }
 
 .booking-info strong {
@@ -848,6 +1011,9 @@ button:active, .booking-btn:active, .admin-btn:active {
     display: flex;
     gap: var(--space-sm);
     flex-wrap: wrap;
+    align-items: flex-start;
+    min-width: 200px;
+    justify-content: flex-end;
 }
 
 /* حالات الحجز */
@@ -881,7 +1047,7 @@ button:active, .booking-btn:active, .admin-btn:active {
     margin-left: var(--space-xs);
 }
 
-/* ===== النوافذ المنبثقة ===== */
+/* ===== النوافذ المنبثقة - محسنة للجوال ===== */
 .modal {
     position: fixed;
     z-index: 1000;
@@ -891,18 +1057,22 @@ button:active, .booking-btn:active, .admin-btn:active {
     height: 100%;
     background: rgba(0,0,0,0.5);
     backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md);
 }
 
 .modal-content {
     background: white;
-    margin: 5% auto;
-    padding: 0;
     border-radius: var(--radius-xl);
-    width: 90%;
-    max-width: 700px;
-    max-height: 80vh;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
     overflow: hidden;
     box-shadow: var(--shadow-heavy);
+    display: flex;
+    flex-direction: column;
 }
 
 .modal-header {
@@ -912,12 +1082,13 @@ button:active, .booking-btn:active, .admin-btn:active {
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #e0e0e0;
+    flex-shrink: 0;
 }
 
 .modal-header h3 {
     color: var(--text-primary);
     margin: 0;
-    font-size: 1.4rem;
+    font-size: clamp(1rem, 3vw, 1.4rem);
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -935,12 +1106,13 @@ button:active, .booking-btn:active, .admin-btn:active {
     cursor: pointer;
     transition: all 0.3s ease;
     border-radius: 50%;
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: #f0f0f0;
+    touch-action: manipulation;
 }
 
 .close:hover {
@@ -950,9 +1122,9 @@ button:active, .booking-btn:active, .admin-btn:active {
 
 .modal-body {
     padding: var(--space-lg);
-    max-height: 60vh;
     overflow-y: auto;
     color: var(--text-primary);
+    flex: 1;
 }
 
 .modal-booking-item {
@@ -999,208 +1171,44 @@ button:active, .booking-btn:active, .admin-btn:active {
     100% { transform: rotate(360deg); }
 }
 
-/* ===== التصميم المتجاوب ===== */
-
-/* الأجهزة اللوحية الكبيرة */
-@media (max-width: 1024px) {
-    main {
-        padding: var(--space-md);
-    }
-    
-    .admin-tabs {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: var(--space-md);
-    }
-    
-    .admin-calendar-day {
-        min-height: 80px;
-        padding: var(--space-xs);
-    }
-    
-    .booking-item-mini {
-        font-size: 0.7rem;
-        padding: 2px var(--space-xs);
-    }
-    
-    .toast-container {
-        left: 10px;
-        top: 10px;
-        max-width: 350px;
-    }
-}
-
-/* الأجهزة اللوحية */
+/* ===== التصميم المتجاوب - الهواتف الذكية ===== */
 @media (max-width: 768px) {
+    :root {
+        --space-xs: 0.25rem;
+        --space-sm: 0.5rem;
+        --space-md: 0.75rem;
+        --space-lg: 1rem;
+        --space-xl: 1.5rem;
+        --font-xs: 0.7rem;
+        --font-sm: 0.8rem;
+        --font-base: 0.9rem;
+        --font-lg: 1rem;
+        --font-xl: 1.1rem;
+    }
+    
+    main {
+        padding: var(--space-sm);
+    }
+    
     header {
         padding: var(--space-md);
     }
     
-    header h1 {
-        font-size: 2rem;
-    }
-    
     #hero {
-        padding: var(--space-lg);
-        margin-bottom: var(--space-lg);
+        padding: var(--space-md);
+        margin-bottom: var(--space-md);
     }
     
     .hero-buttons {
         flex-direction: column;
-        align-items: center;
-        gap: var(--space-md);
+        align-items: stretch;
+        gap: var(--space-sm);
     }
     
     .booking-btn, .admin-btn {
         width: 100%;
-        max-width: 300px;
-        justify-content: center;
-    }
-    
-    .calendar-legend {
-        gap: var(--space-sm);
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .legend-item {
-        width: 100%;
-        max-width: 200px;
-        justify-content: center;
-    }
-    
-    .calendar-day, .admin-calendar-day {
-        font-size: 0.9rem;
-        min-height: 40px;
-    }
-    
-    .admin-calendar-day {
-        min-height: 70px;
-        padding: 4px;
-    }
-    
-    .day-number {
-        font-size: 0.8rem;
-        margin-bottom: 2px;
-    }
-    
-    .booking-item-mini {
-        font-size: 0.65rem;
-        padding: 1px 2px;
-        margin-bottom: 1px;
-    }
-    
-    .booking-count {
-        width: 18px;
-        height: 18px;
-        font-size: 0.7rem;
-        top: 2px;
-        left: 2px;
-    }
-    
-    .admin-tabs {
-        grid-template-columns: repeat(2, 1fr);
-        gap: var(--space-sm);
-    }
-    
-    .tab-card {
-        padding: var(--space-md);
-    }
-    
-    .tab-card span {
-        font-size: 2rem;
-    }
-    
-    .booking-item {
-        flex-direction: column;
-        gap: var(--space-md);
-        text-align: center;
-    }
-    
-    .booking-actions {
-        justify-content: center;
-        width: 100%;
-    }
-    
-    .modal-content {
-        margin: 10% auto;
-        width: 95%;
-        max-height: 85vh;
-    }
-    
-    .nav-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1.1rem;
-    }
-    
-    .toast-container {
-        left: 5px;
-        top: 5px;
-        right: 5px;
         max-width: none;
-    }
-    
-    .toast {
-        margin-bottom: var(--space-xs);
-        width: 100%;
-    }
-}
-
-/* الهواتف المحمولة */
-@media (max-width: 480px) {
-    :root {
-        --space-md: 1rem;
-        --space-lg: 1.5rem;
-        --space-xl: 2rem;
-    }
-    
-    main {
-        padding: var(--space-sm);
-    }
-    
-    header {
-        padding: var(--space-md);
-    }
-    
-    header h1 {
-        font-size: 1.8rem;
-    }
-    
-    header p {
-        font-size: 1rem;
-    }
-    
-    #hero {
-        padding: var(--space-md);
-    }
-    
-    #hero h2 {
-        font-size: 1.4rem;
-    }
-    
-    .booking-container, .login-container {
-        padding: var(--space-md);
-        margin: var(--space-sm);
-    }
-    
-    .form-group {
-        margin-bottom: var(--space-md);
-    }
-    
-    .form-group label {
-        font-size: 1rem;
-        margin-bottom: var(--space-xs);
-    }
-    
-    .form-group input {
-        padding: var(--space-sm);
-        font-size: 0.9rem;
-    }
-    
-    button, .booking-btn, .admin-btn {
-        padding: var(--space-sm) var(--space-md);
-        font-size: 1rem;
-        min-height: 45px;
+        margin: 0;
     }
     
     .calendar-container, .admin-calendar-container {
@@ -1212,66 +1220,50 @@ button:active, .booking-btn:active, .admin-btn:active {
         margin-bottom: var(--space-md);
     }
     
-    .calendar-header h3 {
-        font-size: 1.2rem;
-    }
-    
     .calendar-legend {
-        padding: var(--space-sm);
+        flex-direction: column;
         gap: var(--space-xs);
+        padding: var(--space-sm);
     }
     
     .legend-item {
-        font-size: 0.8rem;
-        padding: var(--space-xs) var(--space-sm);
-    }
-    
-    .dot {
-        width: 12px;
-        height: 12px;
+        width: 100%;
+        justify-content: center;
+        padding: var(--space-sm);
     }
     
     .calendar-day, .admin-calendar-day {
-        font-size: 0.8rem;
-        min-height: 35px;
+        min-height: clamp(35px, 10vw, 45px);
+        font-size: clamp(0.7rem, 2.2vw, 0.9rem);
     }
     
     .admin-calendar-day {
-        min-height: 55px;
+        min-height: clamp(50px, 12vw, 70px);
         padding: 2px;
     }
     
-    .admin-calendar-section {
-        padding: var(--space-md);
-    }
-    
-    .admin-calendar-section h2 {
-        font-size: 1.4rem;
-        margin-bottom: var(--space-md);
-    }
-    
     .day-number {
-        font-size: 0.7rem;
+        font-size: clamp(0.6rem, 2vw, 0.8rem);
         margin-bottom: 1px;
     }
     
     .booking-item-mini {
-        font-size: 0.6rem;
-        padding: 1px;
+        font-size: clamp(0.5rem, 1.5vw, 0.65rem);
+        padding: 1px 2px;
         margin-bottom: 1px;
         border-right-width: 2px;
     }
     
     .booking-count {
-        width: 16px;
-        height: 16px;
-        font-size: 0.6rem;
+        width: clamp(14px, 4vw, 18px);
+        height: clamp(14px, 4vw, 18px);
+        font-size: clamp(0.5rem, 1.5vw, 0.7rem);
         top: 1px;
         left: 1px;
     }
     
     .admin-tabs {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
         gap: var(--space-sm);
     }
     
@@ -1279,161 +1271,112 @@ button:active, .booking-btn:active, .admin-btn:active {
         padding: var(--space-sm);
     }
     
-    .tab-card h3 {
-        font-size: 0.9rem;
-        margin-bottom: var(--space-xs);
-    }
-    
     .tab-card span {
-        font-size: 1.8rem;
-    }
-    
-    .bookings-table {
-        padding: var(--space-md);
-    }
-    
-    .bookings-table h2 {
-        font-size: 1.4rem;
-        margin-bottom: var(--space-md);
+        font-size: clamp(1.2rem, 5vw, 2rem);
     }
     
     .booking-item {
+        flex-direction: column;
+        gap: var(--space-md);
+        text-align: center;
         padding: var(--space-md);
-        margin-bottom: var(--space-sm);
     }
     
     .booking-info {
-        font-size: 0.9rem;
-        line-height: 1.5;
+        min-width: auto;
+    }
+    
+    .booking-actions {
+        justify-content: center;
+        width: 100%;
+        min-width: auto;
     }
     
     .confirm-btn, .cancel-btn {
-        padding: var(--space-xs) var(--space-sm);
-        font-size: 0.8rem;
-        min-height: 36px;
+        flex: 1;
+        min-width: 100px;
     }
     
     .nav-btn {
-        width: 36px;
-        height: 36px;
-        font-size: 1rem;
-    }
-    
-    .modal-content {
-        margin: 5% auto;
-        width: 98%;
-        max-height: 90vh;
-    }
-    
-    .modal-header {
-        padding: var(--space-sm);
-    }
-    
-    .modal-header h3 {
-        font-size: 1.2rem;
-    }
-    
-    .close {
-        width: 30px;
-        height: 30px;
-        font-size: 1.4rem;
-    }
-    
-    .modal-body {
-        padding: var(--space-sm);
-    }
-    
-    .modal-booking-item {
-        padding: var(--space-sm);
-        margin-bottom: var(--space-sm);
+        width: clamp(35px, 8vw, 40px);
+        height: clamp(35px, 8vw, 40px);
+        font-size: clamp(0.9rem, 2.5vw, 1.1rem);
     }
     
     .toast-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        max-width: none;
-        padding: var(--space-sm);
+        top: 5px;
+        left: 5px;
+        right: 5px;
     }
     
     .toast {
-        margin-bottom: var(--space-xs);
         padding: var(--space-sm);
         border-radius: var(--radius-sm);
     }
     
     .toast-title {
-        font-size: 0.9rem;
+        font-size: var(--font-sm);
     }
     
     .toast-message {
-        font-size: 0.8rem;
+        font-size: var(--font-xs);
     }
 }
 
-/* الأجهزة الصغيرة جداً */
-@media (max-width: 320px) {
-    .hero-buttons {
-        gap: var(--space-sm);
-    }
-    
-    .booking-btn, .admin-btn {
-        font-size: 0.9rem;
-        padding: var(--space-sm);
-    }
-    
+/* ===== الهواتف الصغيرة جداً ===== */
+@media (max-width: 480px) {
     .calendar-grid, .admin-calendar-grid {
         gap: 1px;
     }
     
     .calendar-day, .admin-calendar-day {
-        font-size: 0.7rem;
-        min-height: 30px;
+        min-height: clamp(30px, 8vw, 40px);
+        font-size: clamp(0.6rem, 2vw, 0.8rem);
     }
     
     .admin-calendar-day {
-        min-height: 40px;
+        min-height: clamp(40px, 10vw, 60px);
         padding: 1px;
     }
     
     .day-number {
-        font-size: 0.6rem;
+        font-size: clamp(0.5rem, 1.8vw, 0.7rem);
     }
     
     .booking-item-mini {
-        font-size: 0.5rem;
+        font-size: clamp(0.45rem, 1.3vw, 0.6rem);
         padding: 0.5px 1px;
         margin-bottom: 0.5px;
         border-right-width: 1px;
     }
     
     .booking-count {
-        width: 14px;
-        height: 14px;
-        font-size: 0.5rem;
+        width: clamp(12px, 3.5vw, 16px);
+        height: clamp(12px, 3.5vw, 16px);
+        font-size: clamp(0.45rem, 1.3vw, 0.6rem);
     }
     
-    .admin-calendar-section h2 {
-        font-size: 1.2rem;
+    .admin-tabs {
+        grid-template-columns: 1fr;
+        gap: var(--space-xs);
     }
     
-    .toast {
-        padding: var(--space-xs);
+    .tab-card span {
+        font-size: clamp(1rem, 4vw, 1.8rem);
     }
     
-    .toast-title {
-        font-size: 0.8rem;
+    .booking-actions {
+        flex-direction: column;
     }
     
-    .toast-message {
-        font-size: 0.7rem;
+    .confirm-btn, .cancel-btn {
+        width: 100%;
     }
 }
 
 /* ===== تحسينات الوصول ===== */
 @media (prefers-reduced-motion: reduce) {
-    * {
+    *, *::before, *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
@@ -1457,16 +1400,19 @@ input:focus-visible,
     .calendar-day.available {
         background: #90EE90;
         color: #000;
+        border-color: #000;
     }
     
     .calendar-day.booked {
         background: #FFB6C1;
         color: #000;
+        border-color: #000;
     }
     
     .calendar-day.pending {
         background: #FFFFE0;
         color: #000;
+        border-color: #000;
     }
 }
 
@@ -1477,7 +1423,7 @@ input:focus-visible,
         color: black;
     }
     
-    header, .hero-buttons, button, .booking-actions {
+    header, .hero-buttons, button, .booking-actions, .toast-container {
         display: none;
     }
     
@@ -1535,58 +1481,112 @@ input:focus-visible,
     box-shadow: 0 0 0 3px rgba(240, 147, 251, 0.1);
 }
 
-/* ===== تحسينات نهائية ===== */
-/* تحسين المسافات في الأيقونات */
-.form-group label::before,
-.toast-title .icon::before,
-.tab-card::before,
-button::after,
-.booking-btn::after,
-.admin-btn::after {
-    margin: 0 var(--space-xs);
+/* ===== تحسينات نهائية للجوال ===== */
+/* تحسين اللمس */
+.calendar-day.available,
+.admin-calendar-day,
+.tab-card,
+button,
+.booking-btn,
+.admin-btn {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
-/* تحسين الخطوط */
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Cairo', sans-serif;
-    font-weight: 600;
-    line-height: 1.3;
+/* تحسين الخطوط للجوال */
+@media (max-width: 768px) {
+    body {
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+    }
 }
 
-/* تحسين القراءة */
-p, span, div {
-    font-family: 'Cairo', sans-serif;
-    line-height: 1.6;
+/* تحسين المساحات للشاشات الصغيرة */
+@media (max-width: 360px) {
+    .booking-container, .login-container {
+        margin: var(--space-xs);
+        padding: var(--space-md);
+    }
+    
+    .calendar-container, .admin-calendar-container {
+        margin: var(--space-xs) 0;
+        padding: var(--space-sm);
+    }
+    
+    .bookings-table {
+        padding: var(--space-sm);
+    }
 }
 
-/* تحسين المساحات */
-.calendar-day, .admin-calendar-day {
-    padding: var(--space-xs);
+/* تحسين القوائم المنسدلة للجوال */
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem center;
+    background-size: 1rem;
+    padding-right: 2.5rem;
 }
 
-.booking-item {
-    padding: var(--space-lg) var(--space-xl);
+/* إضافة تأثيرات متقدمة للتقويم في الإدارة */
+.admin-calendar-day.has-bookings {
+    background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
+    border-color: #28a745;
 }
 
-/* تحسين التباين */
-.booking-info strong {
-    color: #667eea;
-    font-weight: 600;
+.admin-calendar-day.has-pending {
+    background: linear-gradient(135deg, #fff8e1 0%, #fffbf0 100%);
+    border-color: #ffc107;
 }
 
-/* تحسين الأزرار */
-button, .booking-btn, .admin-btn {
-    letter-spacing: 0.5px;
-    text-transform: none;
+.admin-calendar-day.mixed-status {
+    background: linear-gradient(45deg, #e8f5e8 0%, #e8f5e8 33%, #fff8e1 33%, #fff8e1 66%, #ffeaea 66%);
+    border-color: #6c757d;
 }
 
-/* تحسين التقويم */
-.calendar-day.available:hover {
-    transform: scale(1.05);
-    z-index: 2;
+/* تحسين انتقال الصفحات */
+.page-transition {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
 }
 
-.calendar-day.booked:hover {
-    transform: none;
-    opacity: 0.8;
+.page-transition.loaded {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* إضافة تأثير ripple للأزرار */
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+.ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.ripple:active::before {
+    width: 300px;
+    height: 300px;
 }

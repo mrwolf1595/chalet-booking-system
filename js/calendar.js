@@ -160,8 +160,12 @@ function generateCalendar() {
             dayElement.classList.add('today');
         }
         
-        // التحقق من حالة الحجز
-        const dateString = currentDate.toISOString().split('T')[0];
+        // التحقق من حالة الحجز - الكود المُصحح
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const dateString = `${year}-${month}-${day}`;
+        
         const booking = bookingsData.find(b => b.date === dateString);
         
         if (booking) {

@@ -82,11 +82,11 @@ function renderCalendar() {
             dayElement.classList.add('today');
         }
 
-        // تحديد حالة الحجز - مع تسجيل لتتبع المشكلة
+        // تحديد حالة الحجز - الكود المُصحح
         const year = cellDate.getFullYear();
-        const monthStr = String(cellDate.getMonth() + 1).padStart(2, '0');
-        const dayStr = String(cellDate.getDate()).padStart(2, '0');
-        const dateString = `${year}-${monthStr}-${dayStr}`;
+        const month = (cellDate.getMonth() + 1).toString().padStart(2, '0');
+        const day = cellDate.getDate().toString().padStart(2, '0');
+        const dateString = `${year}-${month}-${day}`;
 
         console.log('فحص التاريخ:', dateString, 'لليوم:', cellDate.getDate());
 
